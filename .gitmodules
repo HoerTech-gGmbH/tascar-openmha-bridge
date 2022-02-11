@@ -1,6 +1,6 @@
 [submodule "tascar"]
 	path = tascar
-	url = ../tascar
+	url = https://github.com/HoerTech-gGmbH/tascar.git
 [submodule "openMHA"]
 	path = openMHA
-	url = ../openMHA
+	url = https://github.com/HoerTech-gGmbH/openMHA.git
