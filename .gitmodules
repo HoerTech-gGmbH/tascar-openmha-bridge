@@ -1,0 +1,6 @@
+[submodule "tascar"]
+	path = tascar
+	url = ../tascar
+[submodule "openMHA"]
+	path = openMHA
+	url = ../openMHA
