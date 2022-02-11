@@ -22,8 +22,6 @@ openMHA/config.mk:
 
 build/%: build
 
-build/%.so: libtascar libopenmha
-
-build/%.so: src/%.cc
+build/%.so: src/%.cc libtascar libopenmha
 	$(CXX) -shared -o $@ $< $(CXXFLAGS) $(LDFLAGS) $(LDLIBS)
 
