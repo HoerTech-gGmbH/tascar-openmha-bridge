@@ -1,27 +1,22 @@
-all: build/tascar_ap_openmha.so
+all: build/tascar_ap_openmha.so build/showver_tascar build/showver_openmha
 
-CXXFLAGS += -Itascar/libtascar/include -Itascar/libtascar/build	\
--IopenMHA/mha/libmha/src/ -fPIC
+#include/usr/share/openmha/config.mk
+include /usr/share/tascar/rules.mk
 
-.PHONY : libtascar libopenmha
-
-libtascar:
-	$(MAKE) -C tascar libtascar
-
-libopenmha: openMHA/config.mk
-	$(MAKE) -C openMHA mha/libmha
+CXXFLAGS += -fPIC $(shell ./test_for_oldmha.sh)
+LDLIBS += -ltascar -lopenmha
 
 build: build/.directory
-
-openMHA/config.mk:
-	(cd openMHA && ./configure)
 
 %/.directory:
 	mkdir -p $*
 	touch $@
 
-build/%: build
-
-build/%.so: src/%.cc build libtascar libopenmha
+build/%.so: src/%.cc build
 	$(CXX) -shared -o $@ $< $(CXXFLAGS) $(LDFLAGS) $(LDLIBS)
 
+build/%: src/%.cc build
+	$(CXX) -o $@ $<
+
+clean:
+	rm -Rf build src/*~

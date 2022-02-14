@@ -19,14 +19,20 @@
  * Version 3 along with TASCAR. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "audioplugin.h"
-#include "coordinates.h"
-#include "errorhandling.h"
-#include "mha_algo_comm.hh"
-#include "mhapluginloader.h"
+#include <tascar/audioplugin.h>
+#include <tascar/coordinates.h>
+#include <tascar/errorhandling.h>
+#include <openmha/mha_algo_comm.hh>
+#include <openmha/mhapluginloader.h>
+
+#ifdef MHAOLDACIF
+using namespace MHAKernel;
+#else
+using namespace MHA_AC;
+#endif
 
 class openmha_t : public TASCAR::audioplugin_base_t,
-                  public MHAKernel::algo_comm_class_t {
+                  public algo_comm_class_t {
 public:
   openmha_t(const TASCAR::audioplugin_cfg_t& cfg);
   void ap_process(std::vector<TASCAR::wave_t>& chunk, const TASCAR::pos_t& pos,
@@ -48,13 +54,24 @@ private:
   MHA_AC::waveform_t acrot;
 };
 
+
 openmha_t::openmha_t(const TASCAR::audioplugin_cfg_t& cfg)
     : audioplugin_base_t(cfg),
       plugin(tsccfg::node_get_attribute_value(e, "plugin")),
       config(tsccfg::node_get_attribute_value(e, "config")),
-      mhaplug(get_c_handle(), plugin), sIn(NULL),
+#ifdef MHAOLDACIF
+      mhaplug(get_c_handle(), plugin), 
+#else
+      mhaplug(*this, plugin), 
+#endif
+      sIn(NULL),
+#ifdef MHAOLDACIF
       acpos(get_c_handle(), "pos", 3, 1, true),
       acrot(get_c_handle(), "rot", 3, 1, true)
+#else
+      acpos(*this, "pos", 3, 1, true),
+      acrot(*this, "rot", 3, 1, true)
+#endif
 {
   GET_ATTRIBUTE(plugin, "", "Plugin name");
   GET_ATTRIBUTE(config, "", "Configuration command handed to openmha");

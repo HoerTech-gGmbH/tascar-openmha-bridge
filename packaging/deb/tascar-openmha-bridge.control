@@ -1,0 +1,7 @@
+Section: non-free/sound
+Maintainer: Giso Grimm <grimm@hz-ol.de>
+Description: TASCAR-openMHA bridge plugin
+  TASCARpro is a toolbox for acoustic scene creation and rendering
+  (virtual acoustic environment, VAE). openMHA is an open community
+  platform for hearing aid algorithm research.
+Homepage: http://www.tascar.org/
